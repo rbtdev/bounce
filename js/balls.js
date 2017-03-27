@@ -10,13 +10,15 @@ function Circle(opts) {
     this.bounce = opts.bounce || 1;
     this.g = .06
     this.lastTime = Date.now();
+    this.color = opts.color || '#777777'
     var c = $('<div>');
     c.css('position', 'absolute');
     c.css('width', radius * 2 + 'px');
     c.css('height', radius * 2 + 'px');
     c.css('border-radius', radius + 'px');
     c.css('border', '1px solid black');
-    c.css('background-color', '#777777');
+    console.log("color:" + this.color);
+    c.css('background-color', this.color);
     c.css('top', this.y - this.radius);
     c.css('left', this.x - this.radius)
     c.on('click', function () {
@@ -67,13 +69,19 @@ $(document).ready(function () {
         var count = parseInt($("#count")[0].value);
         var balls = [];
         for (var i = 0; i < count; i++) {
+            var rgb = {
+                r: Math.floor(Math.random() * 255),
+                g: Math.floor(Math.random() * 255),
+                b: Math.floor(Math.random() * 255)
+            }
             balls.push(new Circle({
                 radius: Math.random() * 15 + 10,
                 x: Math.random() * 1024 + 100,
                 y: 0,
                 vx: Math.random() * 2 - 1,
                 vy: Math.random() * 2 - 1,
-                bounce: Math.random()
+                bounce: Math.random(),
+                color: "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ", 0.5)"
             }));
         }
 
