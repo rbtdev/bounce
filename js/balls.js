@@ -47,17 +47,28 @@ Circle.prototype.move = function (dt) {
 
     this.shape.css('top', this.y - this.radius);
     this.shape.css('left', this.x - this.radius);
-
 }
 
 
 $(document).ready(function () {
-    $("#start").on('click', function () {
+    var controlHtml =
+        '<div id="fps" class="output">FPS:</div> \
+         <div id="time" class="output">TIME:</div> \
+         <div id="delta" class="output">DT:</div> \
+         <textarea id="count"></textarea> \
+         <div><button id="start">Start</button></div>'
+    var controls = $(controlHtml);
+
+    $('body').append(controls);
+    $("#start").on('click', dropBalls)
+    var frames = 0;
+
+    function dropBalls() {
         var count = parseInt($("#count")[0].value);
         var balls = [];
         for (var i = 0; i < count; i++) {
             balls.push(new Circle({
-                radius: Math.random() * 25 + 12,
+                radius: Math.random() * 15 + 10,
                 x: Math.random() * 1024 + 100,
                 y: 0,
                 vx: Math.random() * 2 - 1,
@@ -66,7 +77,7 @@ $(document).ready(function () {
             }));
         }
 
-        frames = 0;
+
         var lastTime = null;
         var start = Date.now();
         window.requestAnimationFrame(drawFrame);
@@ -75,7 +86,7 @@ $(document).ready(function () {
             lastTime = lastTime || now;
             var dt = (now - lastTime);
             lastTime = now;
-            $("#delta").text("DT:" + dt)
+            $("#delta").text("DT:" + dt.toFixed(2))
             $.each(balls, function (index, ball) {
                 ball.move(dt);
             })
@@ -84,9 +95,8 @@ $(document).ready(function () {
             var delta = Date.now() - start
             fps = frames / (delta / 1000);
             $("#fps").text("FPS:" + fps.toFixed(2));
-            $("#time").text("TIME:" + delta / 1000)
+            $("#time").text("TIME:" + (delta / 1000).toFixed(2));
             window.requestAnimationFrame(drawFrame);
         }
-    })
-
+    }
 })
