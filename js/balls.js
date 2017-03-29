@@ -57,7 +57,7 @@ $(document).ready(function () {
         '<div id="fps" class="output">FPS:</div> \
          <div id="time" class="output">TIME:</div> \
          <div id="delta" class="output">DT:</div> \
-         <textarea id="count"></textarea> \
+         <textarea id="count" placeholder="Number of balls"></textarea> \
          <div><button id="start">Start</button></div>'
     var controls = $(controlHtml);
 
