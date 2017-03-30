@@ -90,6 +90,7 @@ $(document).ready(function () {
     var frames = 0;
 
     function dropBalls() {
+        frames = 0;
         var count = parseInt($("#count")[0].value);
         var balls = [];
         for (var i = 0; i < count; i++) {
