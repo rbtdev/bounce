@@ -70,8 +70,8 @@ $(document).ready(function () {
     function setGravity (orientation) {
         var G = 0.06;
         g= {
-            y: G*Math.cos(orientation.y),
-            x: G*Math.sin(orientation.y)
+            y: G*orientation.y,
+            x: G*orientation.x
         }
     }
 
