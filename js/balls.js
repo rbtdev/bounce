@@ -1,3 +1,9 @@
+
+var g = {
+    x:0,
+    y:0
+}
+
 function Circle(opts) {
     var radius = opts.radius || 100;
     var x = opts.x || 0;
@@ -8,7 +14,6 @@ function Circle(opts) {
     this.vx = opts.vx || 0;
     this.vy = opts.vy || 0;
     this.bounce = opts.bounce || 1;
-    this.g = .06
     this.lastTime = Date.now();
     this.color = opts.color || '#777777'
     var c = $('<div>');
@@ -30,8 +35,8 @@ function Circle(opts) {
 }
 
 Circle.prototype.move = function (dt) {
-    this.vy += this.g;
-    this.vx *= .99;
+    this.vy += g.y;
+    this.vx += g.x;
     this.y += this.vy * dt;
     this.x += this.vx * dt;
 
@@ -53,6 +58,26 @@ Circle.prototype.move = function (dt) {
 
 
 $(document).ready(function () {
+
+    addEventListener("deviceorientation", function(event) 
+    {
+
+        var orientation = {
+            x:Math.round(event.gamma),
+            y:Math.round(event.beta),
+            rot:Math.round(event.alpha),
+        }
+        setGravity(orientation)
+    }, true);
+
+    function setGravity (orientation) {
+        var G = 0.06;
+        g= {
+            y: G*Math.cos(orientation.y),
+            x: G*Math.sin(orientation.y)
+        }
+    }
+
     var controlHtml =
         '<div id="fps" class="output">FPS:</div> \
          <div id="time" class="output">TIME:</div> \
