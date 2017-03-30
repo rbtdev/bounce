@@ -71,7 +71,7 @@ $(document).ready(function () {
         var G = 0.06;
         g= {
             y: G*orientation.y,
-            x: G*orientation.x
+            x: -G*orientation.x
         }
         $('#acc').text(JSON.stringify(g));
     }
