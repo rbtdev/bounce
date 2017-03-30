@@ -58,17 +58,14 @@ Circle.prototype.move = function (dt) {
 
 
 $(document).ready(function () {
-
-    addEventListener("deviceorientation", function(event) 
-    {
-
-        var orientation = {
-            x:Math.round(event.gamma),
-            y:Math.round(event.beta),
-            rot:Math.round(event.alpha),
+    window.ondevicemotion = function(event) {
+        var acceleration = {
+            x: event.accelerationIncludingGravity.x,
+            y: event.accelerationIncludingGravity.y,
+            z: event.accelerationIncludingGravity.z
         }
-        setGravity(orientation)
-    }, true);
+        setGravity(acceleration);
+    }
 
     function setGravity (orientation) {
         var G = 0.06;
