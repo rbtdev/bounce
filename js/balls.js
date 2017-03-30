@@ -73,10 +73,12 @@ $(document).ready(function () {
             y: G*orientation.y,
             x: G*orientation.x
         }
+        $('#acc').text(JSON.stringify(g));
     }
 
     var controlHtml =
-        '<div id="fps" class="output">FPS:</div> \
+        '<div id="acc" class="output"></div> \
+         <div id="fps" class="output">FPS:</div> \
          <div id="time" class="output">TIME:</div> \
          <div id="delta" class="output">DT:</div> \
          <textarea id="count" placeholder="Number of balls"></textarea> \
