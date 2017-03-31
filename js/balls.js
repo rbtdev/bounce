@@ -65,7 +65,7 @@ $(document).ready(function () {
     }
 
     function setGravity(event) {
-        var G = 0.005;
+        var G = 0.003;
         g = {
             y: G * event.accelerationIncludingGravity.y,
             x: -G * event.accelerationIncludingGravity.x
@@ -87,12 +87,12 @@ $(document).ready(function () {
          <div id = "balls" class = "output">BALLS:</div> \
          <div id="fps" class="output">FPS:</div> \
          <div id="time" class="output">TIME:</div> \
-         <textarea id="count" placeholder="Number of balls"></textarea> \
-         <div><button id="start">Start</button></div>'
+         <input id="count" resize="false" placeholder="Number of balls"></textarea> \
+         <div><button id="drop">Drop Balls</button></div>'
     var controls = $(controlHtml);
 
     $('body').append(controls);
-    $("#start").on('click', dropBalls);
+    $("#drop").on('click', dropBalls);
 
     var start = null;
     var lastTime = null;
