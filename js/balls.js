@@ -85,7 +85,6 @@ $(document).ready(function () {
          <div id = "balls" class = "output">BALLS:</div> \
          <div id="fps" class="output">FPS:</div> \
          <div id="time" class="output">TIME:</div> \
-         <div id="vy" class="output">VY:</div> \
          <input id="count" resize="false" placeholder="Number of balls"></textarea> \
          <div><button id="drop">Drop Balls</button></div>'
     var controls = $(controlHtml);
