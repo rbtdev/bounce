@@ -39,11 +39,8 @@ function Circle(opts) {
 
 Circle.prototype.move = function (dt) {
 
-    this.vy += (this.massToDrag * g.y) * this.exp * dt;
-    this.vx += (this.massToDrag * g.x) * this.exp * dt;
-
-    if (Math.abs(this.vy) > this.maxVy) this.maxVy = Math.abs(this.vy);
-    if (this.id === 0) $("#vy").text("VY:" + this.maxVy)
+    this.vy += this.massToDrag * g.y * this.exp * dt;
+    this.vx += this.massToDrag * g.x * this.exp * dt;
 
     this.y += this.vy;
     this.x += this.vx;
