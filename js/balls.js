@@ -120,7 +120,7 @@ $(document).ready(function () {
                 vy: 0,
                 mass: Math.random() * 5 + 2,
                 airFriction: Math.random() * 10 + .5,
-                bounce: 0.5, //Math.random(),
+                bounce: Math.random() * .5 + .2,
                 color: "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ", 0.5)"
             }));
         }
