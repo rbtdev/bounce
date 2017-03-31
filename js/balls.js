@@ -4,7 +4,7 @@ var g = {
 }
 
 function Circle(opts) {
-    var radius = opts.radius || (opts.mass + .1) * 5;
+    var radius = opts.radius || Math.pow(opts.mass, 1 / 3) * 20;
     var x = opts.x || 0;
     var y = opts.y || 0;
     this.id = opts.id;
@@ -111,12 +111,12 @@ $(document).ready(function () {
                 id: i,
                 //radius: Math.random() * 15 + 10,
                 x: Math.random() * 1024 + 100,
-                y: 0,
+                y: -1000,
                 vx: 0,
                 vy: 0,
-                mass: Math.random() * 5 + 2,
-                airFriction: Math.random() * 10 + .5,
-                bounce: Math.random() * .5 + .2,
+                mass: Math.random() * 3 + 1,
+                airFriction: 6,
+                bounce: .5, //Math.random() * .5 + .2,
                 color: "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ", 0.5)"
             }));
         }
