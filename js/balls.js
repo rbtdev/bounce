@@ -73,15 +73,6 @@ $(document).ready(function () {
         $('#acc').text(JSON.stringify(g));
     }
 
-    function setGravity(orientation) {
-        var G = 0.005;
-        g = {
-            y: G * orientation.y,
-            x: -G * orientation.x
-        }
-        $('#acc').text(JSON.stringify(g));
-    }
-
     var controlHtml =
         '<div id="acc" class="output"></div> \
          <div id = "balls" class = "output">BALLS:</div> \
