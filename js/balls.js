@@ -65,7 +65,7 @@ $(document).ready(function () {
     }
 
     function setGravity(event) {
-        var G = 0.003;
+        var G = 0.01;
         g = {
             y: G * event.accelerationIncludingGravity.y,
             x: -G * event.accelerationIncludingGravity.x
