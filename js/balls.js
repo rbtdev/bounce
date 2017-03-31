@@ -7,14 +7,18 @@ function Circle(opts) {
     var radius = opts.radius || 100;
     var x = opts.x || 0;
     var y = opts.y || 0;
+    this.id = opts.id;
     this.radius = radius
     this.x = x;
     this.y = y;
     this.vx = opts.vx || 0;
     this.vy = opts.vy || 0;
+    this.maxVy = this.vy;
     this.bounce = opts.bounce || 1;
-    this.mass = .001;
-    this.k = .1;
+    this.mass = opts.mass || 1;
+    this.k = opts.airFriction || 1;
+    this.exp = (1 - Math.exp(-this.k / this.mass));
+    this.massToDrag = this.mass / this.k;
     this.color = opts.color || '#777777'
     var c = $('<div>');
     c.css('position', 'absolute');
@@ -35,8 +39,11 @@ function Circle(opts) {
 
 Circle.prototype.move = function (dt) {
 
-    this.vy += (this.mass * g.y / this.k) * (1 - Math.exp(-this.k / this.mass)) * dt;
-    this.vx += (this.mass * g.x / this.k) * (1 - Math.exp(-this.k / this.mass)) * dt;
+    this.vy += (this.massToDrag * g.y) * this.exp * dt;
+    this.vx += (this.massToDrag * g.x) * this.exp * dt;
+
+    if (Math.abs(this.vy) > this.maxVy) this.maxVy = Math.abs(this.vy);
+    if (this.id === 0) $("#vy").text("VY:" + this.maxVy)
 
     this.y += this.vy;
     this.x += this.vx;
@@ -81,6 +88,7 @@ $(document).ready(function () {
          <div id = "balls" class = "output">BALLS:</div> \
          <div id="fps" class="output">FPS:</div> \
          <div id="time" class="output">TIME:</div> \
+         <div id="vy" class="output">VY:</div> \
          <input id="count" resize="false" placeholder="Number of balls"></textarea> \
          <div><button id="drop">Drop Balls</button></div>'
     var controls = $(controlHtml);
@@ -104,12 +112,15 @@ $(document).ready(function () {
                 b: Math.floor(Math.random() * 255)
             }
             balls.push(new Circle({
+                id: i,
                 radius: Math.random() * 15 + 10,
                 x: Math.random() * 1024 + 100,
                 y: 0,
                 vx: 0,
                 vy: 0,
-                bounce: Math.random(),
+                mass: Math.random() * 5 + 2,
+                airFriction: Math.random() * 10 + .5,
+                bounce: 0.5, //Math.random(),
                 color: "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ", 0.5)"
             }));
         }
