@@ -1,6 +1,6 @@
 var g = {
     x: 0,
-    y: .06
+    y: .1
 }
 
 function Circle(opts) {
@@ -13,7 +13,8 @@ function Circle(opts) {
     this.vx = opts.vx || 0;
     this.vy = opts.vy || 0;
     this.bounce = opts.bounce || 1;
-    this.lastTime = Date.now();
+    this.mass = .001;
+    this.k = .1;
     this.color = opts.color || '#777777'
     var c = $('<div>');
     c.css('position', 'absolute');
@@ -33,8 +34,10 @@ function Circle(opts) {
 }
 
 Circle.prototype.move = function (dt) {
-    this.vy += g.y * dt;
-    this.vx += g.x * dt;
+
+    this.vy += (this.mass * g.y / this.k) * (1 - Math.exp(-this.k / this.mass)) * dt;
+    this.vx += (this.mass * g.x / this.k) * (1 - Math.exp(-this.k / this.mass)) * dt;
+
     this.y += this.vy;
     this.x += this.vx;
 
@@ -104,8 +107,8 @@ $(document).ready(function () {
                 radius: Math.random() * 15 + 10,
                 x: Math.random() * 1024 + 100,
                 y: 0,
-                vx: Math.random() * 2 - 1,
-                vy: Math.random() * 2 - 1,
+                vx: 0,
+                vy: 0,
                 bounce: Math.random(),
                 color: "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ", 0.5)"
             }));
