@@ -1,7 +1,6 @@
-
 var g = {
-    x:0,
-    y:0
+    x: 0,
+    y: .06
 }
 
 function Circle(opts) {
@@ -22,7 +21,6 @@ function Circle(opts) {
     c.css('height', radius * 2 + 'px');
     c.css('border-radius', radius + 'px');
     c.css('border', '1px solid black');
-    console.log("color:" + this.color);
     c.css('background-color', this.color);
     c.css('top', this.y - this.radius);
     c.css('left', this.x - this.radius)
@@ -35,10 +33,10 @@ function Circle(opts) {
 }
 
 Circle.prototype.move = function (dt) {
-    this.vy += g.y;
-    this.vx += g.x;
-    this.y += this.vy * dt;
-    this.x += this.vx * dt;
+    this.vy += g.y * dt;
+    this.vx += g.x * dt;
+    this.y += this.vy;
+    this.x += this.vx;
 
     if (this.y + this.radius + 2 > window.innerHeight) {
         this.vy = -this.vy * this.bounce;
@@ -58,41 +56,53 @@ Circle.prototype.move = function (dt) {
 
 
 $(document).ready(function () {
-    window.ondevicemotion = function(event) {
-        var acceleration = {
-            x: event.accelerationIncludingGravity.x,
-            y: event.accelerationIncludingGravity.y,
-            z: event.accelerationIncludingGravity.z
+    window.ondevicemotion = function (event) {
+        if (event.accelerationIncludingGravity.x === null) {
+            window.ondevicemotion = null;
+        } else {
+            window.ondevicemotion = setGravity
         }
-        setGravity(acceleration);
     }
 
-    function setGravity (orientation) {
+    function setGravity(event) {
         var G = 0.005;
-        g= {
-            y: G*orientation.y,
-            x: -G*orientation.x
+        g = {
+            y: G * event.accelerationIncludingGravity.y,
+            x: -G * event.accelerationIncludingGravity.x
+        }
+        $('#acc').text(JSON.stringify(g));
+    }
+
+    function setGravity(orientation) {
+        var G = 0.005;
+        g = {
+            y: G * orientation.y,
+            x: -G * orientation.x
         }
         $('#acc').text(JSON.stringify(g));
     }
 
     var controlHtml =
         '<div id="acc" class="output"></div> \
+         <div id = "balls" class = "output">BALLS:</div> \
          <div id="fps" class="output">FPS:</div> \
          <div id="time" class="output">TIME:</div> \
-         <div id="delta" class="output">DT:</div> \
          <textarea id="count" placeholder="Number of balls"></textarea> \
          <div><button id="start">Start</button></div>'
     var controls = $(controlHtml);
 
     $('body').append(controls);
-    $("#start").on('click', dropBalls)
+    $("#start").on('click', dropBalls);
+
+    var start = null;
+    var lastTime = null;
     var frames = 0;
+    var balls = [];
+    var running = false;
 
     function dropBalls() {
-        frames = 0;
         var count = parseInt($("#count")[0].value);
-        var balls = [];
+
         for (var i = 0; i < count; i++) {
             var rgb = {
                 r: Math.floor(Math.random() * 255),
@@ -110,16 +120,19 @@ $(document).ready(function () {
             }));
         }
 
+        $('#balls').text("BALLS: " + balls.length);
 
-        var lastTime = null;
-        var start = Date.now();
-        window.requestAnimationFrame(drawFrame);
+        if (!running) {
+            running = true;
+            start = Date.now();
+            lastTime = null;
+            window.requestAnimationFrame(drawFrame);
+        }
 
         function drawFrame(now) {
             lastTime = lastTime || now;
             var dt = (now - lastTime);
             lastTime = now;
-            $("#delta").text("DT:" + dt.toFixed(2))
             $.each(balls, function (index, ball) {
                 ball.move(dt);
             })
