@@ -4,7 +4,7 @@ var g = {
 }
 
 function Circle(opts) {
-    var radius = opts.radius || 100;
+    var radius = opts.radius || (opts.mass + .1) * 5;
     var x = opts.x || 0;
     var y = opts.y || 0;
     this.id = opts.id;
@@ -113,7 +113,7 @@ $(document).ready(function () {
             }
             balls.push(new Circle({
                 id: i,
-                radius: Math.random() * 15 + 10,
+                //radius: Math.random() * 15 + 10,
                 x: Math.random() * 1024 + 100,
                 y: 0,
                 vx: 0,
