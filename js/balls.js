@@ -115,8 +115,8 @@ $(document).ready(function () {
                 vx: 0,
                 vy: 0,
                 mass: Math.random() * 3 + 1,
-                airFriction: 6,
-                bounce: .5, //Math.random() * .5 + .2,
+                airFriction: 1,
+                bounce: Math.random() * .3 + .3,
                 color: "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ", 0.5)"
             }));
         }
