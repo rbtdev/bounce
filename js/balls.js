@@ -1,16 +1,21 @@
 var g = {
     x: 0,
-    y: .1
+    y: 0
+}
+
+var mousePosition = {
+    x: 0,
+    y: 0
 }
 
 function Circle(opts) {
     var radius = opts.radius || Math.pow(opts.mass, 1 / 3) * 20;
-    var x = opts.x || 0;
-    var y = opts.y || 0;
     this.id = opts.id;
     this.radius = radius
-    this.x = x;
-    this.y = y;
+    this.center = opts.center || {
+        x: 0,
+        y: 0
+    };
     this.vx = opts.vx || 0;
     this.vy = opts.vy || 0;
     this.maxVy = this.vy;
@@ -27,8 +32,8 @@ function Circle(opts) {
     c.css('border-radius', radius + 'px');
     c.css('border', '1px solid black');
     c.css('background-color', this.color);
-    c.css('top', this.y - this.radius);
-    c.css('left', this.x - this.radius)
+    c.css('top', this.center.y - this.radius);
+    c.css('left', this.center.x - this.radius)
     c.on('click', function () {
         this.vy = -50
     }.bind(this))
@@ -39,28 +44,61 @@ function Circle(opts) {
 
 Circle.prototype.move = function (dt) {
 
-    this.vy += this.massToDrag * g.y * this.exp * dt;
-    this.vx += this.massToDrag * g.x * this.exp * dt;
 
-    this.y += this.vy;
-    this.x += this.vx;
+    var mouseVector = vector(this.center, mousePosition);
+    var f = (mouseVector.mag) > 0 ? 5 / mouseVector.mag : 0;
+    var fx = -f * Math.cos(mouseVector.angle);
+    var fy = f * Math.sin(mouseVector.angle);
+    this.vy += this.massToDrag * (g.y + fy / this.mass) * this.exp * dt;
+    this.vx += this.massToDrag * (g.x + fx / this.mass) * this.exp * dt;
 
-    if (this.y + this.radius + 2 > window.innerHeight) {
+
+
+    this.center.y += this.vy;
+    this.center.x += this.vx;
+
+    if (this.center.y < this.radius + 2) {
+        debugger
         this.vy = -this.vy * this.bounce;
-        this.y = window.innerHeight - this.radius - 2;
-    }
-    if (this.x < this.radius + 2) {
-        this.vx = -this.vx * this.bounce;
-        this.x = this.radius + 2
-    } else if (this.x > window.innerWidth - this.radius - 2) {
-        this.vx = -this.vx * this.bounce;
-        this.x = window.innerWidth - this.radius - 2;
+        this.center.y = this.radius + 2;
+    } else if (this.center.y + this.radius + 2 > window.innerHeight) {
+        debugger
+        this.vy = -this.vy * this.bounce;
+        this.center.y = window.innerHeight - this.radius - 2;
     }
 
-    this.shape.css('top', this.y - this.radius);
-    this.shape.css('left', this.x - this.radius);
+    if (this.center.x < this.radius + 2) {
+        this.vx = -this.vx * this.bounce;
+        this.center.x = this.radius + 2
+    } else if (this.center.x > window.innerWidth - this.radius - 2) {
+        this.vx = -this.vx * this.bounce;
+        this.center.x = window.innerWidth - this.radius - 2;
+    }
+
+    this.shape.css('top', this.center.y - this.radius);
+    this.shape.css('left', this.center.x - this.radius);
 }
 
+function distance(p1, p2) {
+    dx = p1.x - p2.x;
+    dy = p1.y - p2.y;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+function angle(p1, p2) {
+    dx = p2.x - p1.x;
+    dy = -(p2.y - p1.y);
+    var alpha = Math.atan2(dy, dx);
+    if (alpha < 0) alpha = 2 * Math.PI + alpha;
+    return alpha;
+}
+
+function vector(p1, p2) {
+    var v = {};
+    v.mag = distance(p1, p2);
+    v.angle = angle(p1, p2);
+    return v
+}
 
 $(document).ready(function () {
     window.ondevicemotion = function (event) {
@@ -79,6 +117,11 @@ $(document).ready(function () {
         }
         $('#acc').text(JSON.stringify(g));
     }
+
+    $(document).mousemove(function (event) {
+        mousePosition.x = event.pageX;
+        mousePosition.y = event.pageY;
+    })
 
     var controlHtml =
         '<div id="acc" class="output"></div> \
@@ -110,8 +153,10 @@ $(document).ready(function () {
             balls.push(new Circle({
                 id: i,
                 //radius: Math.random() * 15 + 10,
-                x: Math.random() * 1024 + 100,
-                y: -1000,
+                center: {
+                    x: Math.random() * 1024 + 100,
+                    y: 400
+                },
                 vx: 0,
                 vy: 0,
                 mass: Math.random() * 3 + 1,
