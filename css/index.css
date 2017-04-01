@@ -1,6 +1,7 @@
 .output {
     font-size: 10px;
     color: red;
+    display: none;
 }
 
 input {

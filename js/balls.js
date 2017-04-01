@@ -30,7 +30,7 @@ function Circle(opts) {
     c.css('top', this.y - this.radius);
     c.css('left', this.x - this.radius)
     c.on('click', function () {
-        this.vy = -3
+        this.vy = -50
     }.bind(this))
     this.shape = c;
     $("body").append(this.shape);
