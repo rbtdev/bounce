@@ -3,10 +3,12 @@ var g = {
     y: 0
 }
 
-var mousePosition = {
+var mouse = {
     x: 0,
     y: 0
 }
+
+var cursor = null;
 
 function Circle(opts) {
     var radius = opts.radius || Math.pow(opts.mass, 1 / 3) * 20;
@@ -38,14 +40,14 @@ function Circle(opts) {
         this.vy = -50
     }.bind(this))
     this.shape = c;
-    $("body").append(this.shape);
+    $("#content").append(this.shape);
 
 }
 
 Circle.prototype.move = function (dt) {
 
 
-    var mouseVector = vector(this.center, mousePosition);
+    var mouseVector = vector(this.center, mouse);
     var f = (mouseVector.mag) > 0 ? 5 / mouseVector.mag : 0;
     var fx = -f * Math.cos(mouseVector.angle);
     var fy = f * Math.sin(mouseVector.angle);
@@ -119,8 +121,8 @@ $(document).ready(function () {
     }
 
     $(document).mousemove(function (event) {
-        mousePosition.x = event.pageX;
-        mousePosition.y = event.pageY;
+        mouse.x = event.pageX;
+        mouse.y = event.pageY;
     })
 
     var controlHtml =
@@ -132,7 +134,9 @@ $(document).ready(function () {
          <div><button id="drop">Drop Balls</button></div>'
     var controls = $(controlHtml);
 
-    $('body').append(controls);
+    cursor = $("<img id = 'cursor' src = './img/fan2.gif'>");
+    $('#content').append(cursor);
+    $('#content').append(controls);
     $("#drop").on('click', dropBalls);
 
     var start = null;
@@ -167,7 +171,7 @@ $(document).ready(function () {
         }
 
         $('#balls').text("BALLS: " + balls.length);
-
+        cursor.show();
         if (!running) {
             running = true;
             start = Date.now();
@@ -182,6 +186,8 @@ $(document).ready(function () {
             $.each(balls, function (index, ball) {
                 ball.move(dt);
             })
+            debugger
+            drawCursor();
 
             frames++;
             var delta = Date.now() - start
@@ -189,6 +195,12 @@ $(document).ready(function () {
             $("#fps").text("FPS:" + fps.toFixed(2));
             $("#time").text("TIME:" + (delta / 1000).toFixed(2));
             window.requestAnimationFrame(drawFrame);
+        }
+
+        function drawCursor() {
+            debugger
+            cursor.css('top', mouse.y - 15);
+            cursor.css('left', mouse.x - 15);
         }
     }
 })
